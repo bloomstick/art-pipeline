@@ -36,12 +36,13 @@ tags — that is intentional and recorded in each app's
   `http://127.0.0.1:8188`) and `COMFY_INPUT` (default
   `C:\comfyui-rocm\input`). Requires Adrenalin 26.x + TdrDelay/TdrDdiDelay=60+.
 - Checkpoints in ComfyUI `models/checkpoints/`: `animagine-xl-4.0`
-  (characters/mascots; single sprites stay on base per noveldream
-  2026-10-11 A/B) + `animagine-xl-4.0-opt.safetensors` (DEFAULT for
-  multi-character/group scenes: card-documented stability/anatomy wins,
-  ~10x cleaner faces at 8 heads vs base, proven 2026-10-13; same
-  Euler-Ancestral 25–28 steps, CFG 5 recipe),
-  `sd_xl_base_1.0` (logos/marks), `sd_xl_turbo_1.0_fp16` (drafts only).
+  + `animagine-xl-4.0-opt.safetensors` (Opt is the DEFAULT for all
+  character/scene work: card-documented stability/anatomy wins, clean
+  faces three runs straight including an 8-head crossover, Aniplace
+  verdict 2026-10-13; noveldream keeps base 4.0 for single VN sprites
+  per their 2026-10-11 A/B until they re-test),
+  `sd_xl_base_1.0` (logos/marks — Opt is an illustration model, not a
+  mark tool), `sd_xl_turbo_1.0_fp16` (drafts only).
   IPAdapter (`models/ipadapter` + `models/clip_vision`) for `ipa.py`.
   Upscaler `RealESRGAN_x4plus.pth` for `cupscale.py`.
 - Python 3.12 with `rembg[cpu]`, `Pillow`, `numpy`, `opencv-python`

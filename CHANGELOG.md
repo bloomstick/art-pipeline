@@ -9,9 +9,10 @@ scripts/recipes bump MINOR, breaking flag/model changes bump MAJOR.
 ### Added
 
 - Opt checkpoint guidance: `animagine-xl-4.0-opt` is the default for
-  multi-character/group scenes (card-documented stability/anatomy;
-  ~10x cleaner faces at 8 heads, proven 2026-10-13). Base 4.0 stays
-  default for single sprites (noveldream 2026-10-11 A/B stands).
+  all character/scene work (card-documented stability/anatomy; clean
+  faces three runs straight, Aniplace 2026-10-13). Base 4.0 stays only
+  for single VN sprites (noveldream 2026-10-11 A/B stands) and
+  `sd_xl_base_1.0` stays the mark tool.
 - VTracer recipe for illustrated art: watershed + cutout + curated
   palette, chroma-key transparency handling, `--simplify 1.5`, and
   render-based (not path-count) verification.
