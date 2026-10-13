@@ -35,8 +35,13 @@ tags — that is intentional and recorded in each app's
   support). Override URL/input dir per-run with `COMFY_URL` (default
   `http://127.0.0.1:8188`) and `COMFY_INPUT` (default
   `C:\comfyui-rocm\input`). Requires Adrenalin 26.x + TdrDelay/TdrDdiDelay=60+.
-- Checkpoints in ComfyUI `models/checkpoints/`: `animagine-xl-4.0`,
-  `sd_xl_base_1.0`, `sd_xl_turbo_1.0_fp16` (+ Opt parked).
+- Checkpoints in ComfyUI `models/checkpoints/`: `animagine-xl-4.0`
+  (characters/mascots; single sprites stay on base per noveldream
+  2026-10-11 A/B) + `animagine-xl-4.0-opt.safetensors` (DEFAULT for
+  multi-character/group scenes: card-documented stability/anatomy wins,
+  ~10x cleaner faces at 8 heads vs base, proven 2026-10-13; same
+  Euler-Ancestral 25–28 steps, CFG 5 recipe),
+  `sd_xl_base_1.0` (logos/marks), `sd_xl_turbo_1.0_fp16` (drafts only).
   IPAdapter (`models/ipadapter` + `models/clip_vision`) for `ipa.py`.
   Upscaler `RealESRGAN_x4plus.pth` for `cupscale.py`.
 - Python 3.12 with `rembg[cpu]`, `Pillow`, `numpy`, `opencv-python`
@@ -80,6 +85,18 @@ tags — that is intentional and recorded in each app's
 Not vendored (one-off debug, hardcoded single-file paths): `dbg.py`,
 `dbg3.py`, `dbg4.py` (ComfyUI node probes), `makepal.py` (palette dump),
 `rmsig.py` (superseded by parameterized `rmsig2.py`).
+
+## Vectorizing illustrated art (VTracer recipe, proven 2026-10-13)
+
+Defaults (`stacked` + color-cluster) posterize gradients and fuse
+white-on-white. For flat anime/sticker art use
+`--hierarchical cutout --clustering watershed` with a curated `--palette`
+(+ chroma-key trick for transparency: composite the cutout onto pure
+green, trace, drop green-dominant fills — stacked mode paints a
+full-canvas underpaint slab, cutout does not). Finish with
+`--simplify 1.5` and verify by rendering the SVG (Edge headless
+screenshot), never by path counts alone. Small features the regions eat
+(fangs, shines) get rebuilt from measured source pixels and spliced in.
 
 ## App recipes (live in the apps, not here)
 
