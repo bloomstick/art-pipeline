@@ -56,7 +56,7 @@ tags — that is intentional and recorded in each app's
 | script | purpose |
 |---|---|
 | `smoke.py` | Server check: waits for ComfyUI, runs SDXL-Turbo 512px job (`smoke.py [OUT]`) |
-| `gen.py` | ComfyUI txt2img. `--prompt --out [--ckpt --steps --cfg --sampler --scheduler --w --h --seed]` (defaults: 4-step Turbo 1024 drafts — finals MUST override ckpt/steps) |
+| `gen.py` | ComfyUI txt2img. `--prompt --out [--ckpt --steps --cfg --sampler --scheduler --w --h --seed]` (defaults: 4-step Turbo 512 drafts at cfg 0.0 — finals MUST override ckpt/steps; Turbo never takes guidance or a negative prompt per its card) |
 | `ipa.py` | Style-locked txt2img via IPAdapter (`--ref` style anchor, `--weight` default 0.5 locked, `--wtype`) |
 | `refine.py` | img2img polish / expression variants (`--denoise`, expression-only prompt deltas) |
 | `patch.py` | Surgical patch: crop `--box` → img2img repaint → feathered paste-back (anti-hallucination ladder step 1) |
