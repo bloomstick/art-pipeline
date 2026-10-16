@@ -118,8 +118,8 @@ Machine verdicts (RX 6600 XT gfx1032, 8 GB, measured 2026-10-16):
 - Batches of 3 candidates, pick best with written reasons; img2img refine
   at low denoise for finalists only. Never ship Turbo raw.
 - Cutouts: upscale opaque BEFORE masking (upscalers invent detail in
-  transparent zones); rembg isnet-general-use; verify on magenta
-  composite `(255,0,255)` + pixel audit, never eyeballed previews.
+  transparent zones); rembg isnet-general-use; `verify.py` (magenta
+  composite `(255,0,255)` + JSON pixel audit), never eyeballed previews.
 - Warm-server limit (OBSERVED 2026-10-16, cause UNCONFIRMED): full Windows
   BSOD during prolonged warm-ComfyUI generation. Restart the server
   between long batches; never leave it warm overnight. One server, one

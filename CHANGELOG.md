@@ -25,7 +25,11 @@ scripts/recipes bump MINOR, breaking flag/model changes bump MAJOR.
 
 ## [Unreleased]
 
-(nothing pending)
+- `verify.py`: cutout verification (magenta composite + JSON pixel audit:
+  `w,h,has_alpha,transparent_pct,magenta_visible_pct,near_white_pct`),
+  ported from the last FATHER-side image tool with own logic
+  (`tools/comfy/verify.py`, retired in the single-pipeline
+  consolidation). `magenta.py` kept as-is (quick-look composite).
 
 ## [2.0.1] - 2026-10-16
 

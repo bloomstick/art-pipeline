@@ -42,7 +42,9 @@ Full canonical workflow (setup, recipes, negatives, ledger rule):
 
 - Order: upscale opaque BEFORE masking → rembg → verify on magenta
   composite + pixel audit. Scripts: `cupscale.py`/`esrgan.py`,
-  `rmbg.py`, `magenta.py`, `finish_*.py` (see README table).
+  `rmbg.py`, `magenta.py` (quick-look), `verify.py` (JSON census:
+  `has_alpha/transparent_pct/magenta_visible_pct/near_white_pct`),
+  `finish_*.py` (see README table).
 
 ### 5. recovery
 
