@@ -69,20 +69,22 @@ $q = Invoke-RestMethod -Uri "$env:COMFY_URL/queue" -TimeoutSec 8
   teardown — clear it before the next session. Never leave a server
   running idle (BSOD precaution).
 
-## 6. API outputs carry no UI workflow (proven 2026-10-16)
+## 6. Every output embeds its UI workflow (mandatory since 2026-10-16)
 
 - `SaveImage` embeds a `workflow` chunk ONLY if the `/prompt` request
-  includes `extra_data.extra_pnginfo.workflow`. Scripts that POST just
-  `{prompt, client_id}` produce PNGs with a `prompt` chunk alone
-  (verified: `shot3_action_v2_00001_.png -> ['prompt']` vs browser-made
-  `ComfyUI_00001_.png -> ['prompt', 'workflow']`).
-- Consequence: "open as workflow" / drag-drop-to-canvas does NOTHING on
-  script-made images — there is no canvas graph to restore. The recipe
-  is recoverable from the `prompt` chunk or the submitting script, but
-  it will not one-click reload.
-- If one-click reload matters for a batch, submit with `extra_data`:
-  `{"prompt": wf, "client_id": ..., "extra_data":
-  {"extra_pnginfo": {"workflow": <UI-format graph JSON>}}`.
-- Unrelated look-alike: if the button fails even on browser-made images
-  (which DO embed `workflow`), suspect the popup blocker (allow popups
-  for the `COMFY_URL` origin) or a stale frontend (hard-refresh).
+  includes `extra_data.extra_pnginfo.workflow`. Raw `{prompt,
+  client_id}` submissions produce PNGs with a `prompt` chunk alone —
+  and "open as workflow" silently does nothing on those (diagnosed
+  2026-10-16: script-made `shot3_action_v2_00001_.png -> ['prompt']` vs
+  browser-made `ComfyUI_00001_.png -> ['prompt', 'workflow']`).
+- Hence: ALL scripted gens go through `gen_z.py` (repo root), which
+  patches `reference/z-image-turbo-int8/workflow.json` and ALWAYS sends
+  it as `extra_data.extra_pnginfo.workflow`, plus writes a
+  `<name>.workflow.json` sidecar next to the staged PNG. Raw API-only
+  submissions are banned.
+- Backfill tool for pre-rule images: `tools/embed_workflow.py --png ..
+  --prompt .. --seed .. --prefix ..` (lossless: pixels verified
+  identical, existing chunks preserved).
+- Unrelated look-alike: if the button fails even on workflow-carrying
+  images, suspect the popup blocker (allow popups for the `COMFY_URL`
+  origin) or a stale frontend (hard-refresh).
