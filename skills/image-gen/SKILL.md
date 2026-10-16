@@ -45,6 +45,27 @@ Full install instructions (no binaries in this repo, ever):
 
 Native buckets only — off-bucket sizes degrade anatomy by themselves.
 
+### 1.1 Z-Image-Turbo resolutions (official buckets + machine verdicts)
+
+Official buckets (demo `app.py` `RES_CHOICES`, 2026-10-16; rule from the
+repo README: total area 512²–2048², any aspect ratio):
+
+| category | 1:1 | 4:3 / 3:4 | 3:2 / 2:3 | 16:9 / 9:16 | 21:9 / 9:21 | misc |
+|---|---|---|---|---|---|---|
+| 1024 | 1024² | 1152×864 / 864×1152 | 1248×832 / 832×1248 | **1280×720** / 720×1280 | 1344×576 / 576×1344 | 1152×896 / 896×1152 (9:7) |
+| 1280 | 1280² | 1472×1104 / 1104×1472 | 1536×1024 / 1024×1536 | 1536×864 / 864×1536 | 1680×720 / 720×1680 | 1440×1120 / 1120×1440 (9:7) |
+| 1536 | 1536² | 1728×1296 / 1296×1728 | 1872×1248 / 1248×1872 | 2048×1152 / 1152×2048 | 2016×864 / 864×2016 | 1728×1344 / 1344×1728 (9:7) |
+
+Machine verdicts (RX 6600 XT gfx1032, 8 GB, measured 2026-10-16):
+
+- PROVEN: 1024² (~100–160 s/gen), **1280×720** (50–130 s/gen — fastest,
+  exact viewport match for 1280×720 landscape targets).
+- BANNED: **1536×864** — VAE decode stalls gfx1032 (8+ min silence at
+  `AutoencodingEngine prepared`, queue timeouts, process kill took the
+  server down with it). Larger buckets untested = banned until probed.
+- Policy (binding): never batch on an unprobed size. One still-life
+  probe first; a size that stalls decode once is banned, not retried.
+
 ## 2. Prompt patterns
 
 - Tag-style, comma phrases. Composition guards always:
