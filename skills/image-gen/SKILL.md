@@ -101,7 +101,7 @@ Native buckets only — off-bucket sizes degrade anatomy by themselves.
   between long batches; never leave it warm overnight. One server, one
   job at a time; prove it down after (`/` connection-refused).
 
-## 7. LEDGER RULE (binding — the reason this skill exists)
+## 8. LEDGER RULE (binding — the reason this skill exists)
 
 Every shipped image carries its generation record. Minimum: checkpoint,
 full positive + negative prompt, seed, sampler/scheduler/steps/CFG, size,
