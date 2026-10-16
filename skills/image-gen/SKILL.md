@@ -78,7 +78,18 @@ Native buckets only — off-bucket sizes degrade anatomy by themselves.
   reference; grade consistency per view in the ledger.
 - SF3D input: rembg + square center-crop → 1024px, cut from the FRONT view.
 
-## 6. Batch + finish discipline
+## 6. Cloud fallback (free)
+
+- SeaArt free tier (150 credits/day, ControlNet + character consistency +
+  img2img, anime models, no watermark): use for fast look exploration and
+  prompt prototyping ONLY. Local stays primary + backup: cloud has queues,
+  daily caps, no automation contract, and ledger must be recorded by hand
+  (prompt/seed/model/current date per image).
+- ZeroGPU demo Spaces (e.g. animagine demos): instant drafts only, same
+  ledger-by-hand rule. Never a pipeline stage: no pose control, no Opt
+  guarantee, no reproducibility.
+
+## 7. Batch + finish discipline
 
 - Batches of 3 candidates, pick best with written reasons; img2img refine
   at low denoise for finalists only. Never ship Turbo raw.
