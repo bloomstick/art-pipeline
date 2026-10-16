@@ -27,6 +27,15 @@ scripts/recipes bump MINOR, breaking flag/model changes bump MAJOR.
 
 (nothing pending)
 
+## [2.0.1] - 2026-10-16
+
+- Governance (binding): ALL image work in every project runs through
+  this repo; amendments land here, no parallel pipelines. WORKFLOWS.md
+  trimmed to image-only (cross-domain entries removed — those live with
+  their own repos).
+
+(nothing pending)
+
 ## [1.1.0]
 
 - Opt checkpoint guidance: `animagine-xl-4.0-opt` is the default for
