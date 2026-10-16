@@ -27,6 +27,9 @@ Full install instructions (no binaries in this repo, ever):
   `ART_PIPELINE_DIR`, `HF_HOME`. Scripts fail loudly naming the missing
   var.
 - Gated downloads: `hf` CLI (v2.x name — `huggingface-cli` is dead).
+- Ops (start/probe/queue/stop without losing time): `docs/COMFYUI-OPS.md`
+  — REQUIRED reading before scripting any run (documents the
+  `Invoke-WebRequest /` non-interactive probe bug).
 - Crash ban (measured): plain `euler` above 512px kills the GPU. Finals use
   `euler_ancestral` (Animagine) or `dpmpp_2m/karras` (SDXL base).
   Clients must enforce this (exit, don't run).
