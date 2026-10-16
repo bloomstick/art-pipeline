@@ -1,6 +1,6 @@
 ---
 name: image-gen
-description: Canonical local anime image-generation workflow (ComfyUI + AMD RX 6600 XT). Use for ANY anime character/concept/splash task: setup, proven recipes, anatomy negatives, face detailing, turnaround sheets, and the mandatory ledger rule. Encodes all experience to date — follow it instead of rediscovering.
+description: "Canonical local anime image-generation workflow (ComfyUI + AMD RX 6600 XT). Use for ANY anime character/concept/splash task: setup, proven recipes, anatomy negatives, face detailing, turnaround sheets, and the mandatory ledger rule. Encodes all experience to date — follow it instead of rediscovering."
 ---
 
 # image-gen — canonical anime generation workflow
