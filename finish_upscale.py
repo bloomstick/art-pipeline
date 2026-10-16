@@ -12,7 +12,7 @@ import os
 from PIL import Image
 
 ap = argparse.ArgumentParser()
-ap.add_argument('--src-dir', default=os.environ.get('ART_SRC_DIR', r'C:\Users\frnd\AppData\Local\Temp\opencode'))
+ap.add_argument('--src-dir', default=os.environ.get('ART_SRC_DIR', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'output')))
 ap.add_argument('--assets-dir', default=os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'assets')))
 a_args = ap.parse_args()
 

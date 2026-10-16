@@ -5,7 +5,9 @@ import numpy as np
 from PIL import Image, ImageFilter
 
 COMFY = os.environ.get('COMFY_URL', 'http://127.0.0.1:8188')
-INPUT = os.environ.get('COMFY_INPUT', r'C:\comfyui-rocm\input')
+INPUT = os.environ.get('COMFY_INPUT')
+if not INPUT:
+    sys.exit('COMFY_INPUT is not set (ComfyUI input dir; see docs/MACHINE-SETUP.md)')
 p = argparse.ArgumentParser()
 p.add_argument('--inn', required=True)
 p.add_argument('--out', required=True)

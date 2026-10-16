@@ -7,10 +7,14 @@ import { Plugin } from '@opencode/plugin'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
 const run = promisify(execFile)
-const COMFY = 'http://127.0.0.1:8188'
-const VENV_PY = 'C:\\AI\\venv\\Scripts\\python.exe'
+const COMFY = process.env.ART_COMFY_URL ?? 'http://127.0.0.1:8188'
+const VENV_PY = process.env.ART_VENV_PY
+const PIPELINE_DIR = process.env.ART_PIPELINE_DIR
+if (!VENV_PY) throw new Error('ART_VENV_PY is not set (venv python; see art-pipeline docs/MACHINE-SETUP.md)')
+if (!PIPELINE_DIR) throw new Error('ART_PIPELINE_DIR is not set (art-pipeline repo checkout; see docs/MACHINE-SETUP.md)')
 
 function workflow(prompt: string, negative: string, ckpt: string, w: number, h: number, seed: number) {
   return {
@@ -42,7 +46,7 @@ async function generate(prompt: string, out: string, opts: { ckpt?: string; w?: 
     body: JSON.stringify({ prompt: workflow(prompt, '', ckpt, w, h, seed), client_id: client }),
     signal,
   })
-  if (!res.ok) throw new Error(`ComfyUI /prompt ${res.status}: ${await res.text()}. Is C:\\AI\\start-comfyui.ps1 running?`)
+  if (!res.ok) throw new Error(`ComfyUI /prompt ${res.status}: ${await res.text()}. Is the ComfyUI server running? (ART_COMFY_URL=${COMFY}; see art-pipeline docs/MACHINE-SETUP.md)`)
   const { prompt_id } = (await res.json()) as { prompt_id: string }
   for (let i = 0; i < 120; i++) {
     if (signal?.aborted) throw new Error('aborted')
@@ -73,7 +77,7 @@ export default Plugin.define({
       editor.namespace({ name: 'media', description: 'Local brand asset pipeline (ComfyUI + Pillow + rembg)' })
       editor.add({
         name: 'generate',
-        description: 'Generate a PNG locally with ComfyUI. Requires C:\\AI\\start-comfyui.ps1 running.',
+        description: 'Generate a PNG locally with ComfyUI. Requires the ComfyUI server running (ART_COMFY_URL).',
         input: {
           type: 'object',
           properties: {
@@ -112,7 +116,7 @@ export default Plugin.define({
         execute: async (input, context) => {
           const { inn, out, scale } = input as { inn: string; out: string; scale?: number }
           await context.progress({ status: 'upscaling' })
-          await run(VENV_PY, ['C:\\AI\\media\\upscale.py', '--inn', inn, '--out', out, '--scale', String(scale ?? 2)], { signal: context.signal as any })
+          await run(VENV_PY, [join(PIPELINE_DIR, 'upscale.py'), '--inn', inn, '--out', out, '--scale', String(scale ?? 2)], { signal: context.signal as any })
           return { content: `upscaled ${out}` }
         },
       })
@@ -129,7 +133,7 @@ export default Plugin.define({
         execute: async (input, context) => {
           const { inn, out } = input as { inn: string; out: string }
           await context.progress({ status: 'removing background' })
-          await run(VENV_PY, ['C:\\AI\\media\\rmbg.py', '--inn', inn, '--out', out], { signal: context.signal as any })
+          await run(VENV_PY, [join(PIPELINE_DIR, 'rmbg.py'), '--inn', inn, '--out', out], { signal: context.signal as any })
           return { content: `background removed ${out}` }
         },
       })

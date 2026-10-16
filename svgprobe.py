@@ -1,7 +1,10 @@
 import re
 import sys
+import os
 from collections import Counter
-target = sys.argv[1] if len(sys.argv) > 1 else r'C:\Users\frnd\AppData\Local\Temp\opencode\e10-hd.svg'
+REPO = os.path.dirname(os.path.abspath(__file__))
+OUTDIR = os.environ.get('ART_OUTPUT_DIR', os.path.join(REPO, 'output'))
+target = sys.argv[1] if len(sys.argv) > 1 else os.path.join(OUTDIR, 'e10-hd.svg')
 s = open(target, encoding='utf-8').read()
 fills = re.findall(r'fill="(#[0-9A-Fa-f]{6})"', s)
 c = Counter(fills)

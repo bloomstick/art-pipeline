@@ -4,20 +4,31 @@ Shared image-gen workflow. Semver tags (`vMAJOR.MINOR.PATCH`); apps pin
 `tools/art` to a tag via submodule. Pipeline fixes bump PATCH, new
 scripts/recipes bump MINOR, breaking flag/model changes bump MAJOR.
 
-## [Unreleased]
+## [2.0.0] - 2026-10-16 (BREAKING: portable env contract, no local paths)
 
-### Added
-
-- Canonical `skills/image-gen/SKILL.md`: setup, recipe table, layered
-  negatives, face-detailer mandate, 4-view turnaround method, binding
-  ledger rule (install globally from here after edits).
+- Env contract replaces every machine default: `COMFY_URL` (default
+  127.0.0.1:8188), `COMFY_INPUT` (REQUIRED), `ART_OUTPUT_DIR` (default
+  repo `output/`), `ART_ESRGAN_MODEL` (REQUIRED), `COMFY_DIR` +
+  `COMFY_PYTHON` (launcher), `ART_VENV_PY` + `ART_PIPELINE_DIR` (plugin).
+  Scripts fail loudly naming the missing var. Old `C:\` defaults are gone.
 - `output/` staging dir (git-ignored): generate + curate here, copy good
   results into projects, never commit.
-- `reference/featured-workflows/`: 48 recovered ComfyUI workflows
-  (2026-10-13 brand-art run) + provenance README.
+- `docs/MACHINE-SETUP.md`: install instructions only (checkpoints table
+  with sizes/sources, nodes, env table, verify steps). No models in repo.
+- `scripts/Install-ArtPipeline.ps1`: installs `image-gen` skill globally,
+  checks env (never sets machine state).
+- Canonical `skills/image-gen/SKILL.md` (setup, recipes, layered
+  negatives, face-detailer mandate, turnaround, ledger rule).
+- `reference/featured-workflows/`: 48 recovered ComfyUI workflows + README.
 - `tools/extract-workflow.py`: dump embedded PNG workflows to JSON.
-- Places disambiguation table in README (repo vs machine-local vs
-  scratch vs ephemeral).
+- Places map in README (repo vs machine-local vs scratch vs ephemeral).
+
+## [Unreleased]
+
+(nothing pending)
+
+## [1.1.0]
+
 - Opt checkpoint guidance: `animagine-xl-4.0-opt` is the default for
   all character/scene work (card-documented stability/anatomy; clean
   faces three runs straight, Aniplace 2026-10-13). Base 4.0 stays only

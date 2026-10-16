@@ -5,22 +5,31 @@ description: Canonical local anime image-generation workflow (ComfyUI + AMD RX 6
 
 # image-gen — canonical anime generation workflow
 
-## 0. Machine setup (do once, verify per session)
+## 0. Machine setup (do once per PC, verify per session)
 
-- Server: `C:\AI\start-comfyui.ps1` → patientx-cfz fork `main.py --listen
-  127.0.0.1 --port 8188 --lowvram --disable-pinned-memory --preview-method
-  auto --disable-auto-launch`. LIVE instance is `C:\comfyui-rocm`
-  (stock `C:\AI\ComfyUI` stays untouched).
+Portable env contract — NO machine paths below, only variable names.
+Full install instructions (no binaries in this repo, ever):
+`docs/MACHINE-SETUP.md`.
+
+- Server: `start-comfyui.ps1` in this repo (`COMFY_DIR` + `COMFY_PYTHON`
+  required; port parsed from `COMFY_URL`, default 8188) → patientx-cfz
+  fork flags `--lowvram --disable-pinned-memory --preview-method auto
+  --disable-auto-launch`.
 - GPU: AMD RX 6600 XT (gfx1032) via TheRock nightly builds — official ROCm
   7.x lacks gfx1032. Adrenalin 26.x + TdrDelay/TdrDdiDelay=60+.
-- Checkpoints (`models/checkpoints/`): `animagine-xl-4.0` + **`-opt`
-  (DEFAULT for all character/scene work — card-documented anatomy wins)**,
-  `sd_xl_base_1.0` (logos/marks), `sd_xl_turbo_1.0_fp16` (drafts only).
-- Gated downloads: `hf` CLI (`C:\Python314\Scripts\hf.exe`, v2.x name —
-  `huggingface-cli` is dead) with `HF_HOME=C:\my\projects\hf`.
+- Checkpoints (installed per MACHINE-SETUP §3, never committed):
+  `animagine-xl-4.0` + **`-opt` (DEFAULT for all character/scene work —
+  card-documented anatomy wins)**, `sd_xl_base_1.0` (logos/marks),
+  `sd_xl_turbo_1.0_fp16` (drafts only).
+- Paths: `COMFY_URL` (server), `COMFY_INPUT` (REQUIRED), `ART_OUTPUT_DIR`
+  (default `output/` in repo — the single staging folder),
+  `ART_ESRGAN_MODEL` (REQUIRED for esrgan), `ART_VENV_PY`,
+  `ART_PIPELINE_DIR`, `HF_HOME`. Scripts fail loudly naming the missing
+  var.
+- Gated downloads: `hf` CLI (v2.x name — `huggingface-cli` is dead).
 - Crash ban (measured): plain `euler` above 512px kills the GPU. Finals use
   `euler_ancestral` (Animagine) or `dpmpp_2m/karras` (SDXL base).
-  `tools/comfy/gen.py`-style clients must enforce this (exit, don't run).
+  Clients must enforce this (exit, don't run).
 
 ## 1. Recipe table (start here, deviate only with a ledger note)
 
@@ -41,7 +50,7 @@ Native buckets only — off-bucket sizes degrade anatomy by themselves.
 - Character sheets: `character reference sheet`, plain white/light
   background, `neutral expression`, outfit locked per phrase.
 - Provenance: the `featured/` quality run (seeds 911–919) is archived with
-  full workflows at `C:\my\projects\hf\featured_meta\` — steal structure
+  full workflows in `reference/featured-workflows/` — steal structure
   from those prompts before inventing.
 
 ## 3. Negative blocks (layered — use ALL THREE for characters)

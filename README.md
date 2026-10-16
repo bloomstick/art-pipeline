@@ -26,17 +26,17 @@ tags — that is intentional and recorded in each app's
 `docs/art-pipeline.md`. Worktrees/clones need
 `git submodule update --init` once.
 
-## Prerequisites (machine-level, one-time)
+## Prerequisites (machine-level, one-time — full instructions: `docs/MACHINE-SETUP.md`)
 
-- ComfyUI server: `start-comfyui.ps1` (reference copy of
-  `C:\AI\start-comfyui.ps1`) → `C:\comfyui-rocm\main.py --listen 127.0.0.1
-  --port 8188 --lowvram --disable-pinned-memory --preview-method auto
-  --disable-auto-launch` (patientx-cfz fork; stock ROCm 7.x lacks gfx1032
-  support). Override URL/input dir per-run with `COMFY_URL` (default
-  `http://127.0.0.1:8188`) and `COMFY_INPUT` (default
-  `C:\comfyui-rocm\input`). Requires Adrenalin 26.x + TdrDelay/TdrDdiDelay=60+.
-- Checkpoints in ComfyUI `models/checkpoints/`: `animagine-xl-4.0`
-  + `animagine-xl-4.0-opt.safetensors` (Opt is the DEFAULT for all
+Portable env contract (no machine paths here — set per PC, see MACHINE-SETUP):
+
+- ComfyUI server: `start-comfyui.ps1` (`COMFY_DIR` + `COMFY_PYTHON`
+  required; port parsed from `COMFY_URL`, default 8188) with patientx-cfz
+  fork flags `--lowvram --disable-pinned-memory --preview-method auto
+  --disable-auto-launch` (stock ROCm 7.x lacks gfx1032 support).
+  Requires Adrenalin 26.x + TdrDelay/TdrDdiDelay=60+.
+- Checkpoints (installed per MACHINE-SETUP §3, never committed):
+  `animagine-xl-4.0` + `-opt` (Opt is the DEFAULT for all
   character/scene work: card-documented stability/anatomy wins, clean
   faces three runs straight including an 8-head crossover, Aniplace
   verdict 2026-10-13; noveldream keeps base 4.0 for single VN sprites
@@ -44,12 +44,12 @@ tags — that is intentional and recorded in each app's
   `sd_xl_base_1.0` (logos/marks — Opt is an illustration model, not a
   mark tool), `sd_xl_turbo_1.0_fp16` (drafts only).
   IPAdapter (`models/ipadapter` + `models/clip_vision`) for `ipa.py`.
-  Upscaler `RealESRGAN_x4plus.pth` for `cupscale.py`.
+  Upscaler `RealESRGAN_x4plus.pth` (`ART_ESRGAN_MODEL`) for `cupscale.py`.
 - Python 3.12 with `rembg[cpu]`, `Pillow`, `numpy`, `opencv-python`
-  (any venv; `C:\AI\venv` on this machine). `dematte.py` additionally needs
+  (any venv; `ART_VENV_PY` for plugin use). `dematte.py` additionally needs
   `pymatting`. `svgprobe.py` is stdlib-only.
-- VTracer binary (`C:\AI\tools\vtracer\vtracer`, external, not vendored —
-  licensed third-party tool) for logo marks only.
+- VTracer binary (external, not vendored — licensed third-party tool)
+  for logo marks only.
 
 ## Scripts (in pipeline order)
 
@@ -79,8 +79,8 @@ tags — that is intentional and recorded in each app's
 | `magenta.py` | Verification: stats + magenta composite (`magenta.py IN OUT`) |
 | `svgprobe.py` | Vector audit: fill-color census of VTracer SVG (`svgprobe.py [FILE]`) |
 | `finish_upscale.py` | Fixed mapping: staging dir → 2048 webp assets (`--src-dir` defaults to `ART_SRC_DIR` env, `--assets-dir` defaults to the consuming repo's `assets/` dir) |
-| `start-comfyui.ps1` | Reference copy of the ComfyUI launcher (run the `C:\AI\` original) |
-| `opencode-media-tools.index.ts` | Reference copy of the global opencode plugin (Turbo-default `media_generate`; finals must override) |
+| `start-comfyui.ps1` | Portable ComfyUI launcher (`COMFY_DIR` + `COMFY_PYTHON` env, port from `COMFY_URL`) |
+| `opencode-media-tools.index.ts` | Reference copy of the global opencode plugin (env-based: `ART_COMFY_URL`, `ART_VENV_PY`, `ART_PIPELINE_DIR`) |
 | `WORKFLOW.orig.md` | Superseded origin doc from `C:\AI\media\` (provenance only) |
 
 Not vendored (one-off debug, hardcoded single-file paths): `dbg.py`,

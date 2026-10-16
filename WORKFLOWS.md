@@ -17,15 +17,15 @@ generation settings (Oct 2026, unrecoverable).
 |---|---|---|---|---|---|
 | 1 | [goal-loop](#1-goal-loop--code-loop) | multi-step code task, 2+ file-disjoint parts | `opencode-goal-loop` repo + global skill | model time | 2026-10-16 |
 | 2 | [subagent dispatch](#2-subagent-dispatch) | parallel research or delegation inside a session | global (`default.subagent`) | model time | 2026-10-15 |
-| 3 | [anime concept (ComfyUI)](#3-anime-concept-comfyui) | anime character/concept art, correct anatomy | `C:\comfyui-rocm`, recipes below | ~2–7 min/image (RX 6600 XT) | 2026-10-16 |
+| 3 | [anime concept (ComfyUI)](#3-anime-concept-comfyui) | anime character/concept art, correct anatomy | env-contract install (see art-pipeline docs/MACHINE-SETUP.md), recipes below | ~2–7 min/image (RX 6600 XT) | 2026-10-16 |
 | 4 | [face detailer](#4-face-detailer) | close-up face quality on anime gens | ComfyUI custom nodes | +1–2 min | 2026-10-16 (pending proof) |
 | 5 | [4-view turnaround sheet](#5-4-view-turnaround-sheet) | character reference for 3D (front/sides/back) | ComfyUI (seed-lock + identity ref) | TBD (in flight) | — |
-| 6 | [image-to-3D bake-off](#6-image-to-3d-bake-off) | choosing a mesh backend on your hardware | `C:\Python314` venvs, `HF_HOME=C:\my\projects\hf` | ~1–8 min/candidate | 2026-10-16 |
+| 6 | [image-to-3D bake-off](#6-image-to-3d-bake-off) | choosing a mesh backend on your hardware | own Python venvs + `HF_HOME` model cache | ~1–8 min/candidate | 2026-10-16 |
 | 7 | [3D generative pipeline](#7-3d-generative-pipeline) | concept→mesh→rig→animate→Godot character | `project-FATHER` (`characters/heroine_final/`, `tools/gen3d/`) | ~15 min char (CPU) | 2026-10-16 (loose bar) |
-| 8 | [TripoSR CPU accessory](#8-triposr-cpu-accessory) | single accessory/part mesh from image | `C:\AI\triposr-src` + `tripo_infer_cpu.py` | ~8 min | 2026-10-15 |
+| 8 | [TripoSR CPU accessory](#8-triposr-cpu-accessory) | single accessory/part mesh from image | TripoSR sources + `tripo_infer_cpu.py` (machine-local, see entry) | ~8 min | 2026-10-15 |
 | 9 | [Godot headless proof](#9-godot-headless-proof) | validating a GLB in-engine without the editor | Godot 4.7.2 binary | ~1 min | 2026-10-16 |
 | 10 | [dream-monorepo merge + release](#10-dream-monorepo-merge--release) | landing work / cutting a release in dream-monorepo | `dart tools/merge_to_main.dart`, `dart tools/release.dart` | minutes | 2026-10 (standing) |
-| 11 | [HF gated weights setup](#11-hf-gated-weights-setup) | 401-gated model download (SF3D etc.) | `C:\Python314\Scripts\hf.exe`, `HF_HOME=C:\my\projects\hf` | one-time ~10 min | 2026-10-15 |
+| 11 | [HF gated weights setup](#11-hf-gated-weights-setup) | 401-gated model download (SF3D etc.) | `hf` CLI (v2.x) + `HF_HOME` model cache | one-time ~10 min | 2026-10-15 |
 
 ## Entries
 
@@ -39,7 +39,7 @@ generation settings (Oct 2026, unrecoverable).
 - **Never:** background runs, schedules, silent stops; one invocation ends.
 - **Ledger:** the manifest itself (`Runs` + `Log`); goal branch pushed
   after every mutation.
-- **Source of truth:** `C:\my\projects\opencode-goal-loop` (skill + agents).
+- **Source of truth:** the `opencode-goal-loop` repo (skill + agents).
 
 ### 2. subagent dispatch
 
@@ -62,12 +62,12 @@ generation settings (Oct 2026, unrecoverable).
   GPU — enforced in `project-FATHER/tools/comfy/gen.py`.
 - **AMD path:** ROCm via patientx-cfz fork (TheRock nightly builds — official
   ROCm 7.x lacks gfx1032) + Adrenalin 26.x + TdrDelay/TdrDdiDelay=60+;
-  live server is `C:\comfyui-rocm`, NOT `C:\AI`. Opt variant
+  live ComfyUI instance per `COMFY_DIR` (NOT the stock install). Opt variant
   (`animagine-xl-4.0-opt`) is the default for character/scene work.
 - **Batch discipline:** batches of 3 candidates, pick best; optional
   img2img refine at low denoise for finalists. Never ship Turbo raw;
   upscale opaque BEFORE masking; magenta-composite verification only.
-  Full recipe: `C:\AI\media\WORKFLOW.md` (2026-10-04).
+  Full recipe: art-pipeline `WORKFLOW.orig.md` (2026-10-04 snapshot).
 - **Ledger:** prompt/seed/checkpoint/sampler/steps/CFG + sha256 beside the
   asset, always. (Missing ledgers = the `featured/` loss.)
 
@@ -112,7 +112,7 @@ generation settings (Oct 2026, unrecoverable).
 ### 8. TripoSR CPU accessory
 
 - **Trigger:** single part mesh from one image.
-- **Recipe:** `C:\AI\tripo_infer_cpu.py` + cleanup + kit-mount pattern
+- **Recipe:** TripoSR CPU infer script + cleanup + kit-mount pattern (machine-local install)
   (earmodule/hairpin landed in idle-stance).
 - **Note:** full-mesh fallback if SF3D ever blocked; backs are weak.
 
@@ -135,9 +135,9 @@ generation settings (Oct 2026, unrecoverable).
 
 - **Trigger:** `401 GatedRepoError` on a model download.
 - **Recipe:** token (Read) at `huggingface.co/settings/tokens` → accept
-  gated terms on the model page → `C:\Python314\Scripts\hf.exe auth login`
+  gated terms on the model page → `hf auth login`
   (v2.x CLI is `hf`, NOT `huggingface-cli`) with
-  `HF_HOME=C:\my\projects\hf` set (token + weights land there).
+  `HF_HOME` set (token + weights land there).
 - **Gotcha:** CMD vs PowerShell env syntax; fresh terminal for `setx` vars.
 
 ## Contributing

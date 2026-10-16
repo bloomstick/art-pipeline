@@ -1,12 +1,14 @@
 """Upscale with Real-ESRGAN x4 (tile-safe for 8GB). Falls back to CPU on GPU failure."""
-import argparse, sys
+import argparse, os, sys
 
 p = argparse.ArgumentParser()
 p.add_argument('--inn', required=True)
 p.add_argument('--out', required=True)
-p.add_argument('--model', default=r'C:\AI\models\RealESRGAN_x4plus.pth')
+p.add_argument('--model', default=os.environ.get('ART_ESRGAN_MODEL'))
 p.add_argument('--tile', type=int, default=128)
 a = p.parse_args()
+if not a.model:
+    sys.exit('ART_ESRGAN_MODEL is not set (RealESRGAN_x4plus.pth path; see docs/MACHINE-SETUP.md)')
 
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan import RealESRGANer

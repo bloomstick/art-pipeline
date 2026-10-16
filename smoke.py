@@ -2,7 +2,10 @@
 import json, os, sys, time, urllib.request
 
 COMFY = os.environ.get('COMFY_URL', 'http://127.0.0.1:8188')
-OUT = sys.argv[1] if len(sys.argv) > 1 else r'C:\Users\frnd\AppData\Local\Temp\opencode\smoke.png'
+REPO = os.path.dirname(os.path.abspath(__file__))
+OUTDIR = os.environ.get('ART_OUTPUT_DIR', os.path.join(REPO, 'output'))
+os.makedirs(OUTDIR, exist_ok=True)
+OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(OUTDIR, 'smoke.png')
 
 for _ in range(60):
     try:
