@@ -101,6 +101,12 @@ screenshot), never by path counts alone. Small features the regions eat
 
 ## App recipes (live in the apps, not here)
 
+App-specific recipes (cast lists, prompt templates per cast, per-asset
+ledgers) live in consuming projects, which point AT this repo
+(submodule pin + `image-gen` skill). They reference upstream versions;
+they never fork shared logic here. Governance (binding): ALL image work
+runs through this repo — amend here, never invent a parallel pipeline.
+
 - noveldream `docs/art-pipeline.md`: VN cast recipe, prompt templates,
   per-asset ledgers (`assets/cast/*.json`, `assets/bg/backgrounds.json`,
   `assets/cg/cgs.json`, `assets/cover.json`).

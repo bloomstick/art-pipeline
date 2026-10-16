@@ -1,147 +1,61 @@
-# Workflow Catalog
+# Workflow Index (image pipeline only)
 
-One index for every proven workflow across all projects. Pick the right
-workflow on the first attempt: match your situation to a Trigger, follow
-the recipe, append your ledger row. No rediscovery.
+Every image workflow in one place. Non-image workflows live with their own
+repos and are NOT indexed here — this file, like the repo, has no outward
+dependencies. Consuming projects point AT this repo (submodule pin +
+`image-gen` skill); nothing here points back out.
 
-## Rule (binding)
+| # | Workflow | Trigger (use when…) | Cost | Last proven |
+|---|---|---|---|---|
+| 1 | [anime concept](#1-anime-concept) | anime character/concept art, correct anatomy | ~2–7 min/image (RX 6600 XT) | 2026-10-16 |
+| 2 | [face detailer](#2-face-detailer) | close-up face quality on anime gens | +1–2 min | 2026-10-16 (pending owner QC) |
+| 3 | [4-view turnaround](#3-4-view-turnaround) | character reference for 3D (front/sides/back) | TBD (in flight) | — |
+| 4 | [finish + verify](#4-finish--verify) | cutout/upscale/verify of generated art | seconds–minutes | 2026-10 (standing) |
+| 5 | [recovery](#5-recovery) | unledgered images whose settings are lost | minutes | 2026-10-16 |
 
-A workflow counts as **proven** only with its ledger row (date, inputs,
-cost, output pointer). Unledgered runs are anecdotes, not workflows —
-this catalog exists because unrecorded runs cost us the `featured/`
-generation settings (Oct 2026, unrecoverable).
-
-## Index
-
-| # | Workflow | Trigger (use when…) | Lives | Cost | Last proven |
-|---|---|---|---|---|---|
-| 1 | [goal-loop](#1-goal-loop--code-loop) | multi-step code task, 2+ file-disjoint parts | `opencode-goal-loop` repo + global skill | model time | 2026-10-16 |
-| 2 | [subagent dispatch](#2-subagent-dispatch) | parallel research or delegation inside a session | global (`default.subagent`) | model time | 2026-10-15 |
-| 3 | [anime concept (ComfyUI)](#3-anime-concept-comfyui) | anime character/concept art, correct anatomy | env-contract install (see art-pipeline docs/MACHINE-SETUP.md), recipes below | ~2–7 min/image (RX 6600 XT) | 2026-10-16 |
-| 4 | [face detailer](#4-face-detailer) | close-up face quality on anime gens | ComfyUI custom nodes | +1–2 min | 2026-10-16 (pending proof) |
-| 5 | [4-view turnaround sheet](#5-4-view-turnaround-sheet) | character reference for 3D (front/sides/back) | ComfyUI (seed-lock + identity ref) | TBD (in flight) | — |
-| 6 | [image-to-3D bake-off](#6-image-to-3d-bake-off) | choosing a mesh backend on your hardware | own Python venvs + `HF_HOME` model cache | ~1–8 min/candidate | 2026-10-16 |
-| 7 | [3D generative pipeline](#7-3d-generative-pipeline) | concept→mesh→rig→animate→Godot character | `project-FATHER` (`characters/heroine_final/`, `tools/gen3d/`) | ~15 min char (CPU) | 2026-10-16 (loose bar) |
-| 8 | [TripoSR CPU accessory](#8-triposr-cpu-accessory) | single accessory/part mesh from image | TripoSR sources + `tripo_infer_cpu.py` (machine-local, see entry) | ~8 min | 2026-10-15 |
-| 9 | [Godot headless proof](#9-godot-headless-proof) | validating a GLB in-engine without the editor | Godot 4.7.2 binary | ~1 min | 2026-10-16 |
-| 10 | [dream-monorepo merge + release](#10-dream-monorepo-merge--release) | landing work / cutting a release in dream-monorepo | `dart tools/merge_to_main.dart`, `dart tools/release.dart` | minutes | 2026-10 (standing) |
-| 11 | [HF gated weights setup](#11-hf-gated-weights-setup) | 401-gated model download (SF3D etc.) | `hf` CLI (v2.x) + `HF_HOME` model cache | one-time ~10 min | 2026-10-15 |
+Full canonical workflow (setup, recipes, negatives, ledger rule):
+`skills/image-gen/SKILL.md`.
 
 ## Entries
 
-### 1. goal-loop — code loop
+### 1. anime concept
 
-- **Trigger:** requirements→verified-code, hands-off; 2+ file-disjoint parts.
-- **Recipe:** `/goal <task>` → clarify → `reqs-manifest.md` → DAG → one
-  worktree+branch per worker via `subagent` (fallback foreground
-  `opencode run`) → checker verdict per run → integrate one-by-one to
-  `main` → LAND proof (`ls-remote` == local + contains) → DONE block.
-- **Never:** background runs, schedules, silent stops; one invocation ends.
-- **Ledger:** the manifest itself (`Runs` + `Log`); goal branch pushed
-  after every mutation.
-- **Source of truth:** the `opencode-goal-loop` repo (skill + agents).
+- **Recipe:** `skills/image-gen/SKILL.md` §1 (animagine-xl-4.0-**opt**,
+  euler_ancestral 28 / CFG 5, native buckets) + §2 prompt patterns + §3
+  layered negatives. Crash ban + AMD path per skill §0.
+- **Reference runs:** `reference/featured-workflows/` (48 workflows +
+  provenance README).
 
-### 2. subagent dispatch
+### 2. face detailer
 
-- **Trigger:** parallel research/delegation inside a session.
-- **Recipe:** one `default.subagent` call per message (`agent`,
-  `description`, self-contained `prompt`); `sessionID` continues;
-  `background:true` only for independent work. NEVER set `model`.
-  Resend needs `agent` + `sessionID` both.
-- **Proof:** 3 parallel research agents 2026-10-15; full spec in
-  `project-FATHER/docs/subagents.md`.
+- Impact Pack FaceDetailer preferred (install if absent, record version);
+  fallback named with reason. RealESRGAN-upscale alone is NOT a face
+  detailer. Ledger MUST name what ran.
 
-### 3. anime concept (ComfyUI)
+### 3. 4-view turnaround
 
-- **Trigger:** anime character/concept art with correct anatomy.
-- **Recipe:** animagine-xl-4.0 at NATIVE buckets (832×1216 portrait,
-  1024² square) + `euler_ancestral` 28 steps / CFG 5.0 + anatomy negative
-  (`bad anatomy, bad hands, extra digits…`). Drafts: turbo_fp16, euler,
-  1–4 steps, CFG 0, 512px.
-- **Crash ban (RX 6600 XT, measured):** plain `euler` above 512px kills the
-  GPU — enforced in `project-FATHER/tools/comfy/gen.py`.
-- **AMD path:** ROCm via patientx-cfz fork (TheRock nightly builds — official
-  ROCm 7.x lacks gfx1032) + Adrenalin 26.x + TdrDelay/TdrDdiDelay=60+;
-  live ComfyUI instance per `COMFY_DIR` (NOT the stock install). Opt variant
-  (`animagine-xl-4.0-opt`) is the default for character/scene work.
-- **Batch discipline:** batches of 3 candidates, pick best; optional
-  img2img refine at low denoise for finalists. Never ship Turbo raw;
-  upscale opaque BEFORE masking; magenta-composite verification only.
-  Full recipe: art-pipeline `WORKFLOW.orig.md` (2026-10-04 snapshot).
-- **Ledger:** prompt/seed/checkpoint/sampler/steps/CFG + sha256 beside the
-  asset, always. (Missing ledgers = the `featured/` loss.)
+- Winning look → seed-locked img2img per view + IPAdapter identity
+  reference; consistency graded per view. SF3D input cut from front view
+  (rembg + square crop → 1024px).
 
-### 4. face detailer
+### 4. finish + verify
 
-- **Trigger:** close-up face quality (eyes resolve at 1024px).
-- **Recipe:** Impact Pack FaceDetailer preferred (install if absent, record
-  version); fallback hires-fix/bbox refiner — worker NAMES what worked.
-- **Status:** in flight on heroine-final HF-01 rework; entry graduates on
-  owner QC pass.
+- Order: upscale opaque BEFORE masking → rembg → verify on magenta
+  composite + pixel audit. Scripts: `cupscale.py`/`esrgan.py`,
+  `rmbg.py`, `magenta.py`, `finish_*.py` (see README table).
 
-### 5. 4-view turnaround sheet
+### 5. recovery
 
-- **Trigger:** character reference for 3D: front, left, right, back, same
-  outfit/face.
-- **Recipe (pending proof):** winning look → seed-locked img2img per view
-  + IPAdapter identity reference; consistency graded per view in ledger.
-- **Status:** required deliverable of heroine-final HF-01; entry graduates
-  on acceptance.
+- `tools/extract-workflow.py <png> --outdir DIR` dumps embedded ComfyUI
+  workflows. Works only on raw outputs (re-exports strip metadata).
+  Recovered artifacts commit under `reference/` with a provenance README.
 
-### 6. image-to-3D bake-off
+## Governance (binding)
 
-- **Trigger:** choosing a mesh backend on YOUR hardware.
-- **Recipe:** same input image × candidates (SF3D / TripoSR / Hunyuan),
-  stock settings; judge front likeness, back coherence, topology,
-  texture, wall time, VRAM, license. Winner + evidence table or the
-  decision is void. 200MB committed-binary cap.
-- **Known results (RX 6600 XT, no CUDA):** TripoSR CPU 468s watertight
-  36.5k tris MIT; SF3D CPU 73s textured + quad 9,856f (needs HF login,
-  Stability <$1M license); Hunyuan NO-GO (74GB weights, territorial
-  license). Full table: `project-FATHER/docs/3dgen-bench*.md`.
-
-### 7. 3D generative pipeline
-
-- **Trigger:** full character concept→mesh→rig→animate→Godot.
-- **Recipe:** run-guide `project-FATHER/docs/3dgen-pipeline.md`
-  (env → bench → concept → mesh → rig → anim-qa → sunset).
-- **Budgets:** ≤30k tris, <60 bones, 1024 textures (from art-style).
-- **Status:** proven loose-bar 2026-10-16; strict-bar pass in flight
-  (heroine-final).
-
-### 8. TripoSR CPU accessory
-
-- **Trigger:** single part mesh from one image.
-- **Recipe:** TripoSR CPU infer script + cleanup + kit-mount pattern (machine-local install)
-  (earmodule/hairpin landed in idle-stance).
-- **Note:** full-mesh fallback if SF3D ever blocked; backs are weak.
-
-### 9. Godot headless proof
-
-- **Trigger:** engine validation of a GLB without opening the editor.
-- **Recipe:** `godot --headless` import (0 ERROR required) + scripted
-  scene boot with the asset + renders. Pattern in idle-stance and
-  `docs/3dgen-qa.md`.
-
-### 10. dream-monorepo merge + release
-
-- **Trigger:** landing / releasing in dream-monorepo ONLY.
-- **Recipe:** `dart tools/merge_to_main.dart acquire→merge→finish→release`
-  (ONLY supported path; never hand-merge in the main worktree); releases
-  via `dart tools/release.dart`; tags one ref per push.
-- **Do NOT use in other repos** (solo repos merge locally per goal-loop).
-
-### 11. HF gated weights setup
-
-- **Trigger:** `401 GatedRepoError` on a model download.
-- **Recipe:** token (Read) at `huggingface.co/settings/tokens` → accept
-  gated terms on the model page → `hf auth login`
-  (v2.x CLI is `hf`, NOT `huggingface-cli`) with
-  `HF_HOME` set (token + weights land there).
-- **Gotcha:** CMD vs PowerShell env syntax; fresh terminal for `setx` vars.
-
-## Contributing
-
-New entry = recipe + first ledger row in the same commit. Amendments quote
-the run that taught them. Anything cited here without a ledger pointer
-gets challenged.
+- ALL image work in every project runs through this repo: consume via
+  submodule pin (`tools/art`) + the `image-gen` skill. No parallel image
+  pipelines, no vendored copies drifting in app repos.
+- Amendments land HERE as commits (semver: fixes PATCH, scripts/recipes
+  MINOR, breaking env/flag changes MAJOR). Project-specific recipes stay
+  in the consuming projects and reference upstream versions, never fork logic.
+- Provenance rule: no workflow counts as proven without its ledger row.
