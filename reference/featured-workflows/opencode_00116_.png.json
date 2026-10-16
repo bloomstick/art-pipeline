@@ -1,0 +1,86 @@
+{
+ "1": {
+  "class_type": "CheckpointLoaderSimple",
+  "inputs": {
+   "ckpt_name": "animagine-xl-4.0.safetensors"
+  }
+ },
+ "2": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "chibi, 1girl, fox girl, logo icon, app icon, head only, no neck, symmetrical, front view, white bob hair, simple solid hair shapes, indigo underhair, large fluffy fox ears, pink inner ears, minimal face, big clean anime eyes, small smile, flat vector, thick outlines, solid flat colors, white background, minimalism, simple design",
+   "clip": [
+    "1",
+    1
+   ]
+  }
+ },
+ "3": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "low quality, worst quality, blurry, photorealistic, 3d, text, watermark, signature, shading, gradients, detailed background, busy background, armor, weapon, game cg, muscular, old,heterochromia, deformed",
+   "clip": [
+    "1",
+    1
+   ]
+  }
+ },
+ "4": {
+  "class_type": "EmptyLatentImage",
+  "inputs": {
+   "width": 1024,
+   "height": 1024,
+   "batch_size": 1
+  }
+ },
+ "5": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "2",
+    0
+   ],
+   "negative": [
+    "3",
+    0
+   ],
+   "latent_image": [
+    "4",
+    0
+   ],
+   "seed": 701,
+   "steps": 27,
+   "cfg": 5.0,
+   "sampler_name": "euler_ancestral",
+   "scheduler": "normal",
+   "denoise": 1.0
+  }
+ },
+ "6": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "5",
+    0
+   ],
+   "vae": [
+    "1",
+    2
+   ]
+  }
+ },
+ "7": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "6",
+    0
+   ],
+   "filename_prefix": "opencode"
+  }
+ }
+}

@@ -1,0 +1,86 @@
+{
+ "1": {
+  "class_type": "CheckpointLoaderSimple",
+  "inputs": {
+   "ckpt_name": "sd_xl_base_1.0.safetensors"
+  }
+ },
+ "2": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "Extreme minimal flat vector app icon: a rounded-square white tile containing an anime girl HEAD ONLY, no neck, front-facing symmetric, white bob hair one smooth shape, solid indigo side locks as two shapes, two triangular fox ears breaking the top edge of the tile with pink inner, simple dot eyes with shines, tiny smile. Thick bold outlines, solid flat colors only, margin inside the tile. Iconic, readable at 48 pixels, professional logo design, no text, no photo, no shadows, no strands, no shading, no gradients",
+   "clip": [
+    "1",
+    1
+   ]
+  }
+ },
+ "3": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "photorealistic, photograph, 3d render, hair strands, strand lines, shading, gradients, blush, earrings, jewelry, frame, border, shoulders, body, bust, clothing, neck, armor, weapon, game splash art, text, words, watermark, blurry, low quality, extra limbs, deformed, asymmetric",
+   "clip": [
+    "1",
+    1
+   ]
+  }
+ },
+ "4": {
+  "class_type": "EmptyLatentImage",
+  "inputs": {
+   "width": 1024,
+   "height": 1024,
+   "batch_size": 1
+  }
+ },
+ "5": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "2",
+    0
+   ],
+   "negative": [
+    "3",
+    0
+   ],
+   "latent_image": [
+    "4",
+    0
+   ],
+   "seed": 603,
+   "steps": 40,
+   "cfg": 7.0,
+   "sampler_name": "dpmpp_2m",
+   "scheduler": "karras",
+   "denoise": 1.0
+  }
+ },
+ "6": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "5",
+    0
+   ],
+   "vae": [
+    "1",
+    2
+   ]
+  }
+ },
+ "7": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "6",
+    0
+   ],
+   "filename_prefix": "opencode"
+  }
+ }
+}

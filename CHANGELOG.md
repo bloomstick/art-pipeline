@@ -8,6 +8,16 @@ scripts/recipes bump MINOR, breaking flag/model changes bump MAJOR.
 
 ### Added
 
+- Canonical `skills/image-gen/SKILL.md`: setup, recipe table, layered
+  negatives, face-detailer mandate, 4-view turnaround method, binding
+  ledger rule (install globally from here after edits).
+- `output/` staging dir (git-ignored): generate + curate here, copy good
+  results into projects, never commit.
+- `reference/featured-workflows/`: 48 recovered ComfyUI workflows
+  (2026-10-13 brand-art run) + provenance README.
+- `tools/extract-workflow.py`: dump embedded PNG workflows to JSON.
+- Places disambiguation table in README (repo vs machine-local vs
+  scratch vs ephemeral).
 - Opt checkpoint guidance: `animagine-xl-4.0-opt` is the default for
   all character/scene work (card-documented stability/anatomy; clean
   faces three runs straight, Aniplace 2026-10-13). Base 4.0 stays only

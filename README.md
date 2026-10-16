@@ -106,3 +106,21 @@ screenshot), never by path counts alone. Small features the regions eat
   `assets/cg/cgs.json`, `assets/cover.json`).
 - emberpact `docs/art-pipeline.md`: unit-token / arena / icon recipes
   (UNPROVEN until run on the box), ledgers beside shipped assets.
+
+## Places (disambiguation — read before generating)
+
+| Place | What it is | Rule |
+|---|---|---|
+| This repo | Versioned workflow: scripts, recipes, `skills/image-gen/SKILL.md`, `reference/` | Single source of truth; semver tags; apps pin via submodule |
+| `output/` (here, git-ignored) | Staging for fresh generations | Generate here, curate here, **copy good results into projects** — never work in place, never commit this dir |
+| `reference/` (here, committed) | Recovered/proven workflows + notes | Small JSONs + READMEs only, never binaries |
+| `C:\AI`, `C:\comfyui-rocm` | Machine-local server, models, venvs | NOT versioned; setup documented in README Prerequisites, never committed |
+| `C:\my\projects\hf` (+ `HF_HOME`) | Personal scratch: HF token/cache, recovery dumps | NOT versioned; volatile by design |
+| `%TEMP%`, ComfyUI `output/` | Ephemeral raw generations | Harvest promptly (`tools/extract-workflow.py`); assume loss |
+
+## Agent skill
+
+`skills/image-gen/SKILL.md` is the canonical generation workflow (setup,
+recipes, negatives, detailer, turnaround, ledger rule). Installed globally
+from here — re-install after skill edits:
+`Copy-Item skills/image-gen/SKILL.md ~/.config/opencode/skills/image-gen/`.

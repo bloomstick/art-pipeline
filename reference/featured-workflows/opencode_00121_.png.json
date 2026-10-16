@@ -1,0 +1,86 @@
+{
+ "1": {
+  "class_type": "CheckpointLoaderSimple",
+  "inputs": {
+   "ckpt_name": "animagine-xl-4.0.safetensors"
+  }
+ },
+ "2": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "detailed anime key visual style group illustration FULLY COLORED, vibrant colors, 8 diverse anime characters full body standing in a row in an empty plain white studio room, different ages genders hairstyles and outfits, maid samurai hoodie kimono school uniform armor dress, cat ears fox ears horns hats, different poses waving peace signs thumbs up arms crossed, all facing viewer greeting warmly, detailed faces and hands, clean sharp lineart, cel shaded, official art, high quality",
+   "clip": [
+    "1",
+    1
+   ]
+  }
+ },
+ "3": {
+  "class_type": "CLIPTextEncode",
+  "inputs": {
+   "text": "low quality, worst quality, blurry, photorealistic, 3d, nsfw, suggestive, monochrome, black and white, sketch, lineart only, uncolored, text, watermark, signature, logo, deformed, disfigured, bad anatomy, extra limbs, missing limbs, fused fingers, extra fingers, asymmetric eyes, scenery, detailed background",
+   "clip": [
+    "1",
+    1
+   ]
+  }
+ },
+ "4": {
+  "class_type": "EmptyLatentImage",
+  "inputs": {
+   "width": 1024,
+   "height": 1024,
+   "batch_size": 1
+  }
+ },
+ "5": {
+  "class_type": "KSampler",
+  "inputs": {
+   "model": [
+    "1",
+    0
+   ],
+   "positive": [
+    "2",
+    0
+   ],
+   "negative": [
+    "3",
+    0
+   ],
+   "latent_image": [
+    "4",
+    0
+   ],
+   "seed": 902,
+   "steps": 28,
+   "cfg": 5.0,
+   "sampler_name": "euler_ancestral",
+   "scheduler": "normal",
+   "denoise": 1.0
+  }
+ },
+ "6": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "5",
+    0
+   ],
+   "vae": [
+    "1",
+    2
+   ]
+  }
+ },
+ "7": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "6",
+    0
+   ],
+   "filename_prefix": "opencode"
+  }
+ }
+}
