@@ -84,7 +84,9 @@ $q = Invoke-RestMethod -Uri "$env:COMFY_URL/queue" -TimeoutSec 8
   submissions are banned.
 - Backfill tool for pre-rule images: `tools/embed_workflow.py --png ..
   --prompt .. --seed .. --prefix ..` (lossless: pixels verified
-  identical, existing chunks preserved).
+  identical, existing chunks preserved). Backfill the SERVER-side
+  original in the ComfyUI output dir too — the Assets panel reads those
+  files, so staged copies alone don't fix "open as workflow" from the UI.
 - Unrelated look-alike: if the button fails even on workflow-carrying
   images, suspect the popup blocker (allow popups for the `COMFY_URL`
   origin) or a stale frontend (hard-refresh).
