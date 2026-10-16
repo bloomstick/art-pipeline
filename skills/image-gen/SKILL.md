@@ -76,6 +76,10 @@ Native buckets only — off-bucket sizes degrade anatomy by themselves.
 - Cutouts: upscale opaque BEFORE masking (upscalers invent detail in
   transparent zones); rembg isnet-general-use; verify on magenta
   composite `(255,0,255)` + pixel audit, never eyeballed previews.
+- Warm-server limit (OBSERVED 2026-10-16, cause UNCONFIRMED): full Windows
+  BSOD during prolonged warm-ComfyUI generation. Restart the server
+  between long batches; never leave it warm overnight. One server, one
+  job at a time; prove it down after (`/` connection-refused).
 
 ## 7. LEDGER RULE (binding — the reason this skill exists)
 
