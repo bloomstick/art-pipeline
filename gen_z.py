@@ -89,7 +89,7 @@ while time.time() - t0 < 1500:
     try:
         hist = json.load(urllib.request.urlopen(COMFY + '/history/' + pid_, timeout=30))
     except Exception as e:
-        print('hist-wait', e, flush=True)
+        print('hist-wait', ascii(e), flush=True)
         continue
     e = hist.get(pid_)
     if e and e.get('status', {}).get('completed'):
