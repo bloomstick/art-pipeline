@@ -64,8 +64,25 @@ $q = Invoke-RestMethod -Uri "$env:COMFY_URL/queue" -TimeoutSec 8
   8-step).
 
 ## 5. Stop + prove down
-
 - After the batch: kill the server process, then PROVE the port is
   closed (`/queue` must refuse). A live process + dead port = hung
   teardown — clear it before the next session. Never leave a server
   running idle (BSOD precaution).
+
+## 6. API outputs carry no UI workflow (proven 2026-10-16)
+
+- `SaveImage` embeds a `workflow` chunk ONLY if the `/prompt` request
+  includes `extra_data.extra_pnginfo.workflow`. Scripts that POST just
+  `{prompt, client_id}` produce PNGs with a `prompt` chunk alone
+  (verified: `shot3_action_v2_00001_.png -> ['prompt']` vs browser-made
+  `ComfyUI_00001_.png -> ['prompt', 'workflow']`).
+- Consequence: "open as workflow" / drag-drop-to-canvas does NOTHING on
+  script-made images — there is no canvas graph to restore. The recipe
+  is recoverable from the `prompt` chunk or the submitting script, but
+  it will not one-click reload.
+- If one-click reload matters for a batch, submit with `extra_data`:
+  `{"prompt": wf, "client_id": ..., "extra_data":
+  {"extra_pnginfo": {"workflow": <UI-format graph JSON>}}`.
+- Unrelated look-alike: if the button fails even on browser-made images
+  (which DO embed `workflow`), suspect the popup blocker (allow popups
+  for the `COMFY_URL` origin) or a stale frontend (hard-refresh).
